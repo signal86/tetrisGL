@@ -1,0 +1,2 @@
+Z:/Code/misc/C++/tetrisGL/build/CMakeFiles/edit_cache.dir
+Z:/Code/misc/C++/tetrisGL/build/CMakeFiles/rebuild_cache.dir
