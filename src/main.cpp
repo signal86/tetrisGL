@@ -12,6 +12,8 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
+#include <iostream>
 #include "shader.h"
 #include "ui.cpp"
 #define NK_IMPLEMENTATION
@@ -100,14 +102,36 @@ int main() {
     static const GLfloat g_vertex_buffer_data[] = {
         0.0f, 720.0f, 0.0f,
         640.0f, 0.0f, 0.0f,
-        1280.0f, 720.0f, 0.0f
+        1280.0f, 720.0f, 0.0f,
+
+        0.0f, 0.0f, 0.0f,
+        640.0f, 720.0f, 0.0f,
+        1280.0f, 0.0f, 0.0f
     };
 
-    static const GLfloat g_color_buffer_data[] = {
+    const GLfloat g_color_buffer_data2[] = {
         0.583f,  0.771f,  0.014f,
         0.609f,  0.115f,  0.436f,
-        0.327f,  0.483f,  0.844f
+        0.327f,  0.483f,  0.844f,
     };
+
+    const GLfloat g_color_buffer_data1[] = {
+        0.583f,  0.771f,  0.014f,
+        0.609f,  0.115f,  0.436f,
+        0.327f,  0.483f,  0.844f,
+    };
+
+    for (int i = 0; i < sizeof(g_color_buffer_data1); i++) {
+        std::cout << g_color_buffer_data1[i] << ", ";
+    } std::cout << "\n\n";
+
+    GLfloat* g_color_buffer_data = new GLfloat[sizeof(g_color_buffer_data1) + sizeof(g_color_buffer_data2)];
+    std::copy(g_color_buffer_data1, g_color_buffer_data1 + sizeof(g_color_buffer_data1), g_color_buffer_data);
+    std::copy(g_color_buffer_data2, g_color_buffer_data2 + sizeof(g_color_buffer_data2), g_color_buffer_data + sizeof(g_color_buffer_data1));
+
+    for (int i = 0; i < sizeof(g_color_buffer_data); i++) {
+        std::cout << g_color_buffer_data[i] << ", ";
+    } std::cout << "\n";
 
 	GLuint vertexBuffer;
 	glGenBuffers(1, &vertexBuffer);
@@ -117,7 +141,7 @@ int main() {
 	GLuint colorBuffer;
 	glGenBuffers(1, &colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data1), g_color_buffer_data1, GL_STATIC_DRAW);
 
     do {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -152,10 +176,11 @@ int main() {
         );
 
 
-        glDrawArrays(GL_TRIANGLES, 0, 1*3);
+        glDrawArrays(GL_TRIANGLES, 0, 2*3);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
 
         glfwSwapBuffers(window);
     } while (!glfwWindowShouldClose(window));
